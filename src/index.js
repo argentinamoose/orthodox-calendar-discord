@@ -34,7 +34,7 @@ const job = schedule.scheduleJob("30 * * * * *", async function () {
       break;
     }
     default:
-      const channel = client.channels.cache.get("1216980326652579901"); // For the testing channel
+      const channel = client.channels.cache.get(process.env.DEBUG); // For the testing channel
       channel.send(
         "*Error with calendar setup* https://tenor.com/view/dog-computer-gif-14860983"
       );
@@ -43,20 +43,17 @@ const job = schedule.scheduleJob("30 * * * * *", async function () {
 });
 
 async function dailyMessage(data) {
-  //   const channel = client.channels.cache.get(process.env.RELEASE); // for the daily reading channel
   const channel = client.channels.cache.get(process.env.DEBUG); // For the testing channel
   const currentDate = new Date();
-  const formattedDate = currentDate.toLocaleDateString();
-  const date = "**Today is " + formattedDate + ", " + data.titles[0] + "**";
-  const fast = "The fast is a " + data.fast_exception_desc;
-  const readingsPre =
-    "The readings are, [" +
-    data.readings[0].display +
-    "] and [" +
-    data.readings[1].display +
-    "]";
+  const date = `**Today is ${currentDate.toLocaleDateString()}, ${
+    data.titles[0]
+  }**`;
+  const fast = `The fast is a ${data.fast_exception_desc}`;
+  const readingsPre = `The readings are, [${data.readings[0].display}] and [${data.readings[1].display}]`;
   const readings = readingsPre.replace(/\./g, ":");
-  const top = date + "\n" + fast + "\n" + readings;
+  const top = `${date}
+    ${fast}
+    ${readings};`;
   channel.send(top);
   channel.send("**The synaxarion for today is:**");
   switch (data.stories.length) {
