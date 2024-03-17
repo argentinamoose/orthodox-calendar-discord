@@ -18,7 +18,7 @@ client.on("ready", () => {
   console.log("The bot is ready");
 });
 
-const job = schedule.scheduleJob("30 * * * * *", async function () {
+const job = schedule.scheduleJob("10 * * * * *", async function () {
   switch (calendar) {
     case "new": {
       const response = await fetch("https://orthocal.info/api/gregorian/");
@@ -64,9 +64,14 @@ async function dailyMessage(data) {
       break;
     default:
       data.stories.forEach((e) => {
-        const stories = e.title + "```" + e.story + "```";
-        const storiesWithoutTags = stories.replace(/<\/?[^>]+(>|$)/g, "");
-        channel.send(storiesWithoutTags);
+        channel.send(e.title);
+        const removePlus = e.story.replace(/' \+([^']+)\+'/, "");
+        const breakUpStory = removePlus.split("\n");
+        breakUpStory.forEach((element) => {
+          const storiesWithoutTags = element.replace(/<\/?[^>]+(>|$)/g, "");
+          console.log(storiesWithoutTags);
+          channel.send("```" + storiesWithoutTags + "```");
+        });
       });
       break;
   }
